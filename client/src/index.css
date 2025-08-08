@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter-VariableFont_slnt,wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+.font-inter {
+  font-family: "Inter", system-ui, -apple-system, "San Francisco", Roboto,
+    "Segoe UI", Ubuntu, "Helvetica Neue", sans-serif;
+}
+
 @theme {
   --color-border: hsl(var(--border));
   --color-background: hsl(var(--background));
@@ -13,19 +26,34 @@
 
   --color-card: hsl(var(--card));
 }
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  animation: gradient 8s linear infinite;
+}
 
 @layer base {
   :root {
-    --background: 222 47% 4%;
+    --background: 0 0% 10%;
     --foreground: 213 31% 91%;
 
-    --card: 0 0% 10%;
+    --card: 0 0% 90%;
 
     --primary: 0 0% 100%;
     --secondary: 0 0% 63%;
     --primary-foreground: 213 31% 91%;
 
-    --accent: 180 100% 50%;
+    --accent: 347 48% 81%;
     --accent-themed: 180 100% 50%;
 
     --border: 217 33% 20%;
@@ -42,20 +70,5 @@
   body {
     @apply bg-background text-foreground transition-colors duration-300;
     font-feature-settings: "rlig" 1, "calt" 1;
-  }
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-
-  a:hover {
-    color: #747bff;
-  }
-
-  button {
-    background-color: #f9f9f9;
   }
 }
