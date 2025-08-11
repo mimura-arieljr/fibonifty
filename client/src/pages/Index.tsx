@@ -129,8 +129,8 @@ export const Index = () => {
                         <div className="mb-4">
                             <input
                                 type="text"
-                                className="mb-3 w-full border-b-2 border-secondary px-3 py-2 font-inter outline-none focus:outline-none focus:border-b-2 focus:border-secondary active:border-secondary"
-                                placeholder="Your Name"
+                                className="mb-3 w-full border-b-2 border-secondary px-1 py-2 font-inter outline-none focus:outline-none focus:border-b-2 focus:border-secondary active:border-secondary caret-accent"
+                                placeholder="Name"
                                 value={userId}
                                 onChange={(e) => setUserId(e.target.value)}
                             />
