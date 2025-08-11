@@ -10,7 +10,7 @@ is a minimal, real-time web application that allows agile teams to collaborative
 - 👤 Submit your **name** and **story points**
 - 🙈 Points remain hidden until revealed
 - 👁 Admin can **reveal** or **reset** votes
-- 💡 Fully client-side UI using Bootstrap
+- 💡 Fully client-side UI using Tailwind
 - 🔌 Node.js + Express backend
 
 ---
