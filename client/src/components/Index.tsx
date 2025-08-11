@@ -84,7 +84,7 @@ export const Index = () => {
     };
 
     return (
-        <div className="relative flex items-center justify-center min-h-screen bg-background text-white px-3">
+        <div className="relative flex items-center justify-center min-h-screen bg-background text-primary px-3">
             {!joined && (
                 <>
                     <div className="absolute inset-0 z-[2]">
@@ -108,14 +108,14 @@ export const Index = () => {
                             <button
                                 type="button"
                                 onClick={generateRoomId}
-                                className="bg-transparent border border-white text-white text-sm font-inter font-thin px-6 py-2 rounded-full transition-transform duration-300"
+                                className="bg-transparent border border-primary text-primary text-sm font-inter font-thin px-6 py-2 rounded-full transition-transform duration-300"
                             >
                                 Generate Room ID
                             </button>
 
                             <input
                                 type="text"
-                                className="border bg-primary text-background pl-5 py-2 rounded-full text-sm font-inter font-thin"
+                                className="border bg-primary text-background pl-5 py-2 rounded-full text-sm font-inter font-thin caret-accent"
                                 placeholder="Enter Room ID"
                                 value={roomId}
                                 onChange={(e) => setRoomId(e.target.value)}
@@ -134,7 +134,7 @@ export const Index = () => {
                 <div className="z-[3] w-full max-w-md">
                     <h1 className="text-2xl font-inter font-bold mb-4 text-center">Fibonifty</h1>
                     <h2 className="text-md font-inter font-thin mb-4 text-center">You are in room: <span className="text-accent">{roomId}</span></h2>
-                    <div className="bg-white rounded-2xl shadow-lg p-6 text-black">
+                    <div className="bg-primary rounded-2xl shadow-lg p-6 text-black">
                         <div className="mb-4">
                             <input
                                 type="text"
@@ -170,7 +170,7 @@ export const Index = () => {
                             </div>
 
                             <button
-                                className="w-full px-3 py-2 rounded font-inter font-light text-black border border-secondary hover:border-green-700 hover:text-green-700"
+                                className="w-full px-3 py-2 rounded font-inter font-light text-black border border-secondary hover:border-accent-themed hover:text-accent-themed"
                                 onClick={() => submitPoints()}
                             >
                                 <UserRoundCheck className="inline mr-2 h-4 w-4 mb-1" />
@@ -187,19 +187,42 @@ export const Index = () => {
                             </button>
                         </div>
 
+                        {/* Display users and their estimates: */}
                         <div className="mt-4 font-inter text-gray-900">
-                            {Object.entries(users).map(([name, pts]) => (
-                                pts === 'coffee' ? (
-                                    <p key={name}>
-                                        {name}: {revealed ? <Coffee className="inline h-5 pb-0.75" /> : <VenetianMask className="inline h-5 mr-1" />}
-                                    </p>
-                                ) : (
-                                    <p key={name}>
-                                        {name}: {revealed ? pts : <VenetianMask className="inline h-5 mr-1" />}
-                                    </p>
-                                )
-                            ))}
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
+                                {Object.entries(users).map(([name, pts]) => {
+                                    const isCoffee = pts === 'coffee';
+                                    const isRevealed = revealed;
+                                    return (
+                                        <div
+                                            key={name}
+                                            className="flex flex-col items-center justify-between rounded-xl border border-secondary/40 bg-accent-themed text-primary px-3 py-3 shadow-sm text-center"
+                                            title={name}
+                                        >
+                                            <div className="w-full truncate text-sm font-inter font-thin text-primary" aria-label={`User ${name}`}>
+                                                {name}
+                                            </div>
+                                            <div className="mt-2 text-base">
+                                                {isCoffee ? (
+                                                    isRevealed ? (
+                                                        <Coffee className="inline h-5 w-5 align-middle" />
+                                                    ) : (
+                                                        <VenetianMask className="inline h-5 w-5 align-middle" />
+                                                    )
+                                                ) : (
+                                                    isRevealed ? (
+                                                        <span className="font-inter text-primary text-sm" aria-label={`Points ${String(pts)}`}>{String(pts)}</span>
+                                                    ) : (
+                                                        <VenetianMask className="inline h-5 w-5 align-middle" />
+                                                    )
+                                                )}
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
                         </div>
+
                     </div>
                 </div>
             )}

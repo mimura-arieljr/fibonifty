@@ -1,0 +1,27 @@
+{
+  "name": "fibonifty",
+  "version": "1.0.0",
+  "description": "is a minimal, real-time web application that allows agile teams to collaboratively estimate story points. Each team member joins a room, enters their name, submits a point value, and waits for the reveal. Built with WebSockets to ensure everyone stays in sync.",
+  "main": "index.js",
+    "scripts": {
+    "build": "npm-run-all build:client build:server",
+    "build:client": "cd client && npm install && npm run build",
+    "build:server": "cd server && npm install && npm run build",
+
+    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mimura-arieljr/fibonifty.git"
+  },
+  "keywords": [],
+  "author": "Chock Mimura",
+  "license": "ISC",
+  "homepage": "https://github.com/mimura-arieljr/fibonifty#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.0",
+    "npm-run-all": "^4.1.5"
+  }
+}
