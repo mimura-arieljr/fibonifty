@@ -8,7 +8,13 @@ import Toast from 'react-hot-toast';
 import Footer from "./Footer"
 
 
-const socket = io('http://localhost:3001', { transports: ['websocket'] });
+// For running the project locally and forwarding the port to public, use FORWARDED_DEV_SERVER
+// For running the project locally and for development and testing, use LOCAL_SERVER
+
+const FORWARDED_DEV_SERVER='https://2c3g9tq8-3001.asse.devtunnels.ms/'
+// const LOCAL_SERVER='http://localhost:3001'
+
+const socket = io(FORWARDED_DEV_SERVER, { transports: ['websocket'] });
 
 const StoryPoints: number[] = [1, 2, 3, 5, 8, 13, 21, 34];
 const TShirtSizes: string[] = ['XS-Green', 'XS-Yellow', 'XS-Red', 'S-Green', 'S-Yellow', 'S-Red', 'M-Green', 'M-Yellow', 'M-Red', 'L-Green', 'L-Yellow', 'L-Red', 'XL-Green', 'XL-Yellow', 'XL-Red'];
