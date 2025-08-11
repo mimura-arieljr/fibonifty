@@ -1,14 +1,15 @@
+import Dropdown from '../components/dropdown';
 import Threads from '../components/animation/Threads';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import GradientText from '../components/animation/GradientText'
-import { Coffee } from 'lucide-react';
+import { Coffee, View, RotateCcw, VenetianMask, UserRoundCheck } from 'lucide-react';
 
 
-const socket = io(); // Connect to backend
+const socket = io('http://localhost:3001', { transports: ['websocket'] });
 
-const StoryPoints: unknown[] = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, <Coffee></Coffee>];
-const TShirtSizes: unknown[] = ['XS-Green', 'XS-Yellow', 'XS-Red', 'S-Green', 'S-Yellow', 'S-Red', 'M-Green', 'M-Yellow', 'M-Red', 'L-Green', 'L-Yellow', 'L-Red', 'XL-Green', 'XL-Yellow', 'XL-Red', <Coffee></Coffee>];
+const StoryPoints: number[] = [1, 2, 3, 5, 8, 13, 21, 34];
+const TShirtSizes: string[] = ['XS-Green', 'XS-Yellow', 'XS-Red', 'S-Green', 'S-Yellow', 'S-Red', 'M-Green', 'M-Yellow', 'M-Red', 'L-Green', 'L-Yellow', 'L-Red', 'XL-Green', 'XL-Yellow', 'XL-Red'];
 
 export const Index = () => {
     const [roomId, setRoomId] = useState('');
@@ -19,49 +20,62 @@ export const Index = () => {
     const [users, setUsers] = useState<Record<string, number | string>>({});
     const [revealed, setRevealed] = useState(false);
 
-    // Options derived from the existing arrays (filter out the Coffee icon React element)
+    // Listen for room updates from the server
+    useEffect(() => {
+        const handler = (payload: { users: Record<string, number | string>; revealed: boolean }) => {
+            setUsers(payload.users || {});
+            setRevealed(!!payload.revealed);
+        };
+        socket.on('room:update', handler);
+        return () => {
+            socket.off('room:update', handler);
+        };
+    }, []);
+
+
     const storyOptions = (StoryPoints.filter((v) => typeof v === 'number') as number[]);
     const tshirtOptions = (TShirtSizes.filter((v) => typeof v === 'string') as string[]);
 
     const joinRoom = () => {
-        if (!roomId.trim()) {
+        if (!roomId.trim() || roomId.length < 6) {
             alert('Please enter a valid room ID');
             return;
         }
-        socket.emit('joinRoom', roomId);
+        socket.emit('joinRoom', { roomId, userId });
         setJoined(true);
     };
 
     const generateRoomId = () => {
-        // Simple client-side ID (replace with backend-generated in prod)
         const id = Math.random().toString(36).slice(2, 8).toUpperCase();
         setRoomId(id);
     };
 
-    const submitPoints = () => {
+    const submitPoints = (newSelection?: string | number) => {
         if (!userId.trim()) {
             alert('Please enter your name');
             return;
         }
-        if (selection === '') {
+        const finalSelection = newSelection ?? selection;
+        if (finalSelection === '' || finalSelection === undefined) {
             alert('Please choose an estimate');
             return;
         }
-
-        setUsers((prev) => ({ ...prev, [userId]: selection }));
+        socket.emit('submitSelection', { roomId, userId, selection: finalSelection });
         setSelection('');
     };
 
-    const revealPoints = () => setRevealed(true);
+    const revealPoints = () => {
+        socket.emit('reveal', { roomId });
+    };
 
     const resetEntries = () => {
+        socket.emit('reset', { roomId });
+        // setSelection('');
         setUsers({});
-        setRevealed(false);
-        setSelection('');
     };
 
     return (
-        <div className="relative flex items-center justify-center min-h-screen bg-background text-white px-3 overflow-hidden">
+        <div className="relative flex items-center justify-center min-h-screen bg-background text-white px-3">
             {!joined && (
                 <>
                     <div className="absolute inset-0 z-[2]">
@@ -109,71 +123,72 @@ export const Index = () => {
 
             {joined && (
                 <div className="z-[3] w-full max-w-md">
+                    <h1 className="text-2xl font-inter font-bold mb-4 text-center">Fibonifty</h1>
+                    <h2 className="text-md font-inter font-thin mb-4 text-center">You are in room: <span className="text-accent">{roomId}</span></h2>
                     <div className="bg-white rounded-2xl shadow-lg p-6 text-black">
                         <div className="mb-4">
                             <input
                                 type="text"
-                                className="mb-3 w-full border border-gray-300 px-3 py-2 rounded"
+                                className="mb-3 w-full border-b-2 border-secondary px-3 py-2 font-inter outline-none focus:outline-none focus:border-b-2 focus:border-secondary active:border-secondary"
                                 placeholder="Your Name"
                                 value={userId}
                                 onChange={(e) => setUserId(e.target.value)}
                             />
 
                             <div className="flex gap-3 mb-3">
-                                <label htmlFor="estimateType" className="sr-only">Estimate Type</label>
-                                <select
-                                    id="estimateType"
-                                    className="w-1/2 border border-gray-300 px-3 py-2 rounded"
-                                    value={estimateType}
-                                    onChange={(e) => setEstimateType(e.target.value as 'story' | 'tshirt')}
+                                <div className="w-1/2 font-inter font-thin">
+                                    <Dropdown
+                                        label="Estimate Type"
+                                        options={['Story Points', 'T-Shirt Size']}
+                                        selected={estimateType === 'story' ? 'Story Points' : 'T-Shirt Size'}
+                                        onSelect={(val) => setEstimateType(val === 'Story Points' ? 'story' : 'tshirt')}
+                                    />
+                                </div>
+                                <div className="flex-1 font-inter font-thin">
+                                    <Dropdown
+                                        label="Estimate"
+                                        options={estimateType === 'story' ? storyOptions.map(String) : tshirtOptions}
+                                        selected={selection === '' ? '' : String(selection)}
+                                        onSelect={(val) => setSelection(val)}
+                                    />
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={() => submitPoints("coffee")}
                                 >
-                                    <option value="story">Story Points</option>
-                                    <option value="tshirt">T-Shirt Size</option>
-                                </select>
-
-                                <label htmlFor="estimate" className="sr-only">Estimate</label>
-                                <select
-                                    id="estimate"
-                                    className="flex-1 border border-gray-300 px-3 py-2 rounded"
-                                    value={selection === '' ? '' : String(selection)}
-                                    onChange={(e) => setSelection(e.target.value)}
-                                >
-                                    <option value="">Select…</option>
-                                    {estimateType === 'story'
-                                        ? storyOptions.map((opt) => (
-                                            <option key={opt} value={opt}>{opt}</option>
-                                        ))
-                                        : tshirtOptions.map((opt) => (
-                                            <option key={opt} value={opt}>{opt}</option>
-                                        ))}
-                                </select>
-                                <button >
-                                    <Coffee></Coffee>
+                                    <Coffee className="inline mr-1 border border-secondary p-1 rounded hover:scale-110" />
                                 </button>
                             </div>
 
                             <button
-                                className="w-full px-3 py-2 rounded bg-green-600 text-white"
-                                onClick={submitPoints}
+                                className="w-full px-3 py-2 rounded font-inter font-light text-black border border-secondary hover:border-green-700 hover:text-green-700"
+                                onClick={() => submitPoints()}
                             >
+                                <UserRoundCheck className="inline mr-2 h-4 w-4 mb-1" />
                                 Submit
                             </button>
                         </div>
 
-                        <div className="mt-2 flex justify-end gap-2">
-                            <button className="px-3 py-1 rounded bg-yellow-500 text-white" onClick={revealPoints}>
-                                Reveal
+                        <div className="mt-0.5 flex justify-end gap-2">
+                            <button onClick={revealPoints}>
+                                <View className="inline h-4 w-4 hover:scale-120" />
                             </button>
-                            <button className="px-3 py-1 rounded bg-red-600 text-white" onClick={resetEntries}>
-                                Reset
+                            <button onClick={resetEntries}>
+                                <RotateCcw className="inline h-4 w-4 transition-transform hover:-rotate-90 toolt" />
                             </button>
                         </div>
 
-                        <div className="mt-4 text-gray-900">
+                        <div className="mt-4 font-inter text-gray-900">
                             {Object.entries(users).map(([name, pts]) => (
-                                <p key={name}>
-                                    {name}: {revealed ? pts : 'X'}
-                                </p>
+                                pts === 'coffee' ? (
+                                    <p key={name}>
+                                        {name}: {revealed ? <Coffee className="inline h-5 pb-0.75" /> : <VenetianMask className="inline h-5 mr-1" />}
+                                    </p>
+                                ) : (
+                                    <p key={name}>
+                                        {name}: {revealed ? pts : <VenetianMask className="inline h-5 mr-1" />}
+                                    </p>
+                                )
                             ))}
                         </div>
                     </div>

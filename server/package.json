@@ -1,4 +1,13 @@
 {
+  "name": "fibonifty-server",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon --watch src --exec ts-node src/index.ts",
+    "build": "tsc -p .",
+    "start": "node dist/index.js"
+  },
   "dependencies": {
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
