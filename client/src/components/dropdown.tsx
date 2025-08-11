@@ -8,7 +8,7 @@ interface DropdownProps {
     onSelect: (value: string) => void;
 }
 
-export default function Example({ label, options, selected, onSelect }: DropdownProps) {
+export default function Dropdown({ label, options, selected, onSelect }: DropdownProps) {
     return (
         <Menu as="div" className="relative inline-block w-full">
             <MenuButton className="inline-flex w-full justify-between rounded-md bg-white px-3 py-2 text-sm font-inter shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50">

@@ -1,9 +1,10 @@
-import Dropdown from '../components/dropdown';
-import Threads from '../components/animation/Threads';
+import Dropdown from './Dropdown';
+import Threads from './animation/Threads';
 import { useState, useEffect } from 'react';
 import io from 'socket.io-client';
-import GradientText from '../components/animation/GradientText'
-import { Coffee, View, RotateCcw, VenetianMask, UserRoundCheck } from 'lucide-react';
+import GradientText from './animation/GradientText'
+import { Coffee, View, RotateCcw, VenetianMask, UserRoundCheck, CircleAlert } from 'lucide-react';
+import Toast from 'react-hot-toast';
 
 
 const socket = io('http://localhost:3001', { transports: ['websocket'] });
@@ -19,6 +20,15 @@ export const Index = () => {
     const [selection, setSelection] = useState<string | number | ''>('');
     const [users, setUsers] = useState<Record<string, number | string>>({});
     const [revealed, setRevealed] = useState(false);
+
+    const toasterProps = {
+        style: {
+            background: 'hsl(var(--border))',
+            color: '#f2f0ef',
+            fontFamily: 'Inter, sans-serif',
+        },
+        icon: <CircleAlert className="text-red-500" />
+    };
 
     // Listen for room updates from the server
     useEffect(() => {
@@ -38,7 +48,7 @@ export const Index = () => {
 
     const joinRoom = () => {
         if (!roomId.trim() || roomId.length < 6) {
-            alert('Please enter a valid room ID');
+            Toast.error('Please enter a valid room ID', { ...toasterProps });
             return;
         }
         socket.emit('joinRoom', { roomId, userId });
@@ -52,12 +62,12 @@ export const Index = () => {
 
     const submitPoints = (newSelection?: string | number) => {
         if (!userId.trim()) {
-            alert('Please enter your name');
+            Toast.error('Please enter your name', { ...toasterProps });
             return;
         }
         const finalSelection = newSelection ?? selection;
         if (finalSelection === '' || finalSelection === undefined) {
-            alert('Please choose an estimate');
+            Toast.error('Please choose an estimate', { ...toasterProps });
             return;
         }
         socket.emit('submitSelection', { roomId, userId, selection: finalSelection });
@@ -70,7 +80,6 @@ export const Index = () => {
 
     const resetEntries = () => {
         socket.emit('reset', { roomId });
-        // setSelection('');
         setUsers({});
     };
 
@@ -197,3 +206,5 @@ export const Index = () => {
         </div>
     );
 };
+
+export default Index;
