@@ -1,10 +1,11 @@
-import Dropdown from './Dropdown';
+import Dropdown from './dropdown';
 import Threads from './animation/Threads';
 import { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import GradientText from './animation/GradientText'
 import { Coffee, View, RotateCcw, VenetianMask, UserRoundCheck, CircleAlert } from 'lucide-react';
 import Toast from 'react-hot-toast';
+import Footer from "./Footer"
 
 
 const socket = io('http://localhost:3001', { transports: ['websocket'] });
@@ -92,7 +93,7 @@ export const Index = () => {
                     </div>
 
                     <div className="text-primary text-center z-[3]">
-                        <h1 className="text-[40px] md:text-[46px] font-inter font-bold mb-4">
+                        <h1 className="text-[30px] md:text-[46px] font-inter font-bold mb-4">
                             Estimate Smarter, Plan Better -
                             <GradientText
                                 colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
@@ -100,7 +101,7 @@ export const Index = () => {
                                 showBorder={false}
                                 className="custom-class"
                             >
-                                <span className='text-primary text-[40px] md:text-[46px] font-inter font-bold'>with</span> Fibonifty!
+                                <span className='text-primary text-[30px] md:text-[46px] font-inter font-bold'>with</span> Fibonifty!
                             </GradientText>
                         </h1>
 
@@ -108,14 +109,14 @@ export const Index = () => {
                             <button
                                 type="button"
                                 onClick={generateRoomId}
-                                className="bg-transparent border border-primary text-primary text-sm font-inter font-thin px-6 py-2 rounded-full transition-transform duration-300"
+                                className="bg-transparent border border-primary text-primary text-xs md:text-sm font-inter font-thin px-3 md:px-6 py-2 rounded-full transition-transform duration-300"
                             >
                                 Generate Room ID
                             </button>
 
                             <input
                                 type="text"
-                                className="border bg-primary text-background pl-5 py-2 rounded-full text-sm font-inter font-thin caret-accent"
+                                className="border bg-primary text-background pl-5 py-2 rounded-full text-xs md:text-sm px-3 md:px-6 font-inter font-thin caret-accent"
                                 placeholder="Enter Room ID"
                                 value={roomId}
                                 onChange={(e) => setRoomId(e.target.value)}
@@ -222,7 +223,7 @@ export const Index = () => {
                                 })}
                             </div>
                         </div>
-
+                        <Footer />
                     </div>
                 </div>
             )}
