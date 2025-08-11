@@ -16,8 +16,7 @@ is a minimal, real-time web application that allows agile teams to collaborative
 ---
 
 ## 🖼 Preview
-
-> *(Add a screenshot or demo gif here if available)*
+![App Preview](client/public/images/fibonifty.png)
 
 ---
 
@@ -42,32 +41,69 @@ cd fibonifty
 
 ### 2. Install Dependencies
 
+On the root folder,
 ```bash
 npm install
 ```
+This installs dependencies on the root.
+
+Then on the same directory, run:
+```
+npm run build
+```
+
+This installs all dependecies for both client and server
 
 ---
 
 ## ▶️ Run the App
 
+On the root folder, run:
 ```bash
-npm start
+npm run dev
 ```
 
-This runs `server.js` and serves the app at:  
-📍 `http://localhost:3000`
+This runs both client and server
 
 ---
 
 ## 🔧 Project Structure
 
 ```
-reveal/
-├── public/               # Frontend (HTML, CSS, JS)
-│   └── index.html
-├── server.js             # Express + WebSocket backend
-├── package.json
-└── README.md
+├── 📁 client/
+│   ├── 📁 public/
+│   │   └── 📁 fonts/
+│   │   └── 📁 images/
+│   ├── 📁 src/
+│   │   ├── 📁 assets/
+│   │   ├── 📁 components/
+│   │   │   ├── 📁 animation/
+│   │   │   │   ├── 📄 GradientText.tsx
+│   │   │   │   └── 📄 Threads.tsx
+│   │   │   ├── 📄 Dropdown.tsx
+│   │   │   ├── 📄 Index.tsx
+│   │   │   └── 📄 Users.tsx
+│   │   ├── 📁 pages/
+│   │   │   └── 📄 Home.tsx
+│   │   ├── 📄 App.tsx
+│   │   ├── 🎨 index.css
+│   │   ├── 📄 main.tsx
+│   │   └── 📄 vite-env.d.ts
+│   ├── 📖 README.md
+│   ├── 📄 eslint.config.js
+│   ├── 🌐 index.html
+│   ├── 📄 package.json
+│   ├── 📄 tsconfig.app.json
+│   ├── 📄 tsconfig.json
+│   ├── 📄 tsconfig.node.json
+│   └── 📄 vite.config.ts
+├── 📁 server/
+│   ├── 📁 src/
+│   │   └── 📄 index.ts
+│   ├── 📄 package.json
+│   └── 📄 tsconfig.json
+├── 📖 README.md
+└── 📄 package.json
 ```
 
 ---
@@ -88,6 +124,5 @@ reveal/
 - [ ] Persistent rooms with history
 - [ ] Shareable invite links
 - [ ] Timed voting sessions
-- [ ] Customizable point scales (e.g. Fibonacci, T-shirt sizing)
 
 
