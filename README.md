@@ -67,6 +67,15 @@ This runs both client and server
 
 ---
 
+## Host a Tunnel Server by Port Forwarding
+
+1. Run the app `npm run dev`
+2. Get the localhost URL for both client and server (eg. http://localhost:3001 (server) and http://localhost:5173/ (client))
+3. Add each URL to forward the port.
+4. Go to client>src>components>Index.tsx and see if you need to update the value of FORWARDED_DEV_SERVER to whatever the port value of localhost:3001 is. 
+5. Make sure that FORWARDED_DEV_SERVER is equal to the port value of localhost:3001
+6. Open the tunnel created for localhost:5173 in the browser
+
 ## 🔧 Project Structure
 
 ```
